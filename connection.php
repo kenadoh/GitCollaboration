@@ -8,7 +8,8 @@ class login{
        $username="root";
        $password="ekenem12345";
        $dbname ="phpdb";
-
+       $logins = false;
+       $showError = false;
     //connect
     $conn = mysqli_connect($servername, $username, $password, $dbname);
     
@@ -41,11 +42,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (mysqli_num_rows($result) == 1){
         while($row=mysqli_fetch_assoc($result)){
                 if (password_verify($pass, $row['password'])){ 
-                    //$login = true;
-                   // session_start();
-                    //$_SESSION['loggedin'] = true;
-                    //$_SESSION['username'] = $username;
-                    header("Location:forms-editors.html");
+                    $logins = true;
+                     session_start();
+                    $_SESSION['loggedin'] = true;
+                  
+                    $_SESSION['username'] = $username;
+                    $_SESSION['fname'] = $row["FirstName"]; 
+                    $_SESSION['lname'] = $row["LastName"];
+                    header("Location:forms-editors.php");
                 } 
                 else{
                     $showError = "Invalid Credentials";
@@ -71,7 +75,15 @@ function test_input($data) {
 
 
 
-
+  public function logout(){
+  //session_start();
+ 
+  session_unset();
+  session_destroy();
+  
+  header("location: index.php");
+  
+  }
 
 
 
